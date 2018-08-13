@@ -3,6 +3,7 @@ package org.shinthirty.mysticsquare;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import java.io.IOException;
 
 /**
  * Entry point.
@@ -43,7 +44,11 @@ public class App implements Runnable {
 
     @Override
     public void run() {
-        PuzzleSolver solver = new PuzzleSolver(inputFile, outputFile);
-        solver.solve();
+        try {
+            PuzzleSolver solver = new PuzzleSolver(inputFile, outputFile);
+            solver.solve();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
