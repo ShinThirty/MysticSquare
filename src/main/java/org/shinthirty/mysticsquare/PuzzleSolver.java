@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import org.shinthirty.mysticsquare.models.Block;
 import org.shinthirty.mysticsquare.models.Direction;
@@ -34,7 +36,7 @@ class PuzzleSolver {
   /**
    * Unvisited queue.
    */
-  private Deque<Puzzle> unvisited;
+  private Queue<Puzzle> unvisited;
 
   /**
    * Visited set.
@@ -52,7 +54,7 @@ class PuzzleSolver {
     Puzzle puzzle = Puzzle.fromFile(inputFile);
     this.outputFile = outputFile;
 
-    unvisited = new ArrayDeque<>();
+    unvisited = new PriorityQueue<>();
     unvisited.add(puzzle);
 
     visited = new HashSet<>();

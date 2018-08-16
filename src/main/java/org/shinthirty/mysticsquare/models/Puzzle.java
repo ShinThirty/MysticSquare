@@ -23,7 +23,7 @@ import org.shinthirty.mysticsquare.configs.Configuration;
  */
 @Data
 @Builder
-public class Puzzle {
+public class Puzzle implements Comparable<Puzzle> {
 
   /**
    * List of blocks in the puzzle.
@@ -44,6 +44,11 @@ public class Puzzle {
    * Bitboard value to represent the occupied grids.
    */
   private int occupied;
+
+  /**
+   * Potential cost of this puzzle state.
+   */
+  private int cost;
 
   /**
    * A string to represent the solved puzzle state.
@@ -106,7 +111,7 @@ public class Puzzle {
       bottom = Bitboard.draw(0, Configuration.INSTANCE.height-1, Configuration.INSTANCE.width-1, Configuration.INSTANCE.height-1);
       left = Bitboard.draw(0, 0, 0, Configuration.INSTANCE.height-1);
 
-      return Puzzle.builder().blocks(blocks).occupied(0).build();
+      return Puzzle.builder().blocks(blocks).occupied(0).cost(0).build();
     }
   }
 
@@ -209,7 +214,7 @@ public class Puzzle {
       return Puzzle.builder()
           .blocks(newBlocks)
           .occupied(0)
-          .prev(this)
+          .prev(this).cost(-1)
           .build();
     }
 
@@ -286,5 +291,57 @@ public class Puzzle {
     }
 
     return new String(os.toByteArray(), StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public int compareTo(Puzzle other) {
+    return getCost() - other.getCost();
+  }
+
+  /**
+   * Retrieve the potential cost of this puzzle state.
+   *
+   * @return    Potential cost
+   */
+  public int getCost() {
+    if (cost < 0) {
+      cost = g() + h();
+    }
+
+    return cost;
+  }
+
+  /**
+   * Real cost function.
+   *
+   * @return    Real cost
+   */
+  private int g() {
+    int g = 0;
+    Puzzle current = this;
+    while (current.prev != null) {
+      g++;
+      current = current.prev;
+    }
+
+    return g;
+  }
+
+  /**
+   * Heuristic cost function.
+   *
+   * @return    Heuristic cost
+   */
+  private int h() {
+    int h = 0;
+    for (Block block : blocks) {
+      if (block.getIndex() != 0) {
+        int originalX = (block.getIndex() - 1) % Configuration.INSTANCE.width;
+        int originalY = (block.getIndex() - 1) / Configuration.INSTANCE.width;
+        h += Math.abs(block.getX() - originalX) + Math.abs(block.getY() - originalY);
+      }
+    }
+
+    return h;
   }
 }
