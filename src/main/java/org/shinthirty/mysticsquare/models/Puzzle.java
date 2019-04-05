@@ -303,7 +303,7 @@ public class Puzzle implements Comparable<Puzzle> {
    *
    * @return    Potential cost
    */
-  public int getCost() {
+  private int getCost() {
     if (cost < 0) {
       cost = g() + h();
     }

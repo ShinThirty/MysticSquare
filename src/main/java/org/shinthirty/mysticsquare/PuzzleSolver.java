@@ -34,14 +34,9 @@ class PuzzleSolver {
   private String outputFile;
 
   /**
-   * Unvisited queue.
+   * The puzzle to be solved.
    */
-  private Queue<Puzzle> unvisited;
-
-  /**
-   * Visited set.
-   */
-  private Set<Puzzle> visited;
+  private Puzzle puzzle;
 
   /**
    * Constructor.
@@ -51,32 +46,15 @@ class PuzzleSolver {
    * @throws IOException  When input file is invalid
    */
   PuzzleSolver(final String inputFile, final String outputFile) throws IOException {
-    Puzzle puzzle = Puzzle.fromFile(inputFile);
+    puzzle = Puzzle.fromFile(inputFile);
     this.outputFile = outputFile;
-
-    unvisited = new PriorityQueue<>();
-    unvisited.add(puzzle);
-
-    visited = new HashSet<>();
-    visited.add(puzzle);
   }
 
   /**
    * Solve the puzzle.
    */
   void solve() {
-    Puzzle current;
 
-    while (!unvisited.isEmpty()) {
-      current = unvisited.poll();
-
-      if (current.isSolved()) {
-        generateSolution(current);
-        break;
-      } else {
-        unvisited.addAll(nextPuzzles(current));
-      }
-    }
   }
 
   /**
